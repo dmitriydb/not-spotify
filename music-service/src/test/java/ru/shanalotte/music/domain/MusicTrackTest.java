@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
@@ -17,10 +18,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import ru.shanalotte.music.persistence.repository.MusicGenreRepository;
 import ru.shanalotte.music.persistence.repository.MusicTrackRepository;
+import ru.shanalotte.music.test.annotation.IntegrationTest;
+import ru.shanalotte.music.test.helper.RepoFacade;
 
+@ActiveProfiles("test")
 public class MusicTrackTest {
 
   @Nested
@@ -79,7 +84,32 @@ public class MusicTrackTest {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @Test
+    @Autowired
+    private RepoFacade repoFacade;
+
+    @IntegrationTest
+    @DisplayName("Creating track and adding genre")
+    public void should_add_Genre() {
+      repoFacade.deleteAll();
+      MusicGenre g1 = new MusicGenre("pop");
+      MusicGenre g2 = new MusicGenre("rock");
+      musicGenreRepository.save(g1);
+      musicGenreRepository.save(g2);
+
+      MusicTrack t1 = new MusicTrack("test", 1);
+      t1.setGenres(Set.of(g1, g2));
+
+      MusicTrack t2 = new MusicTrack("test2", 2);
+      t2.setGenres(Set.of(g1));
+
+
+      mongoTemplate.insert(t1);
+      mongoTemplate.insert(t2);
+    }
+
+
+
+    @IntegrationTest
     @DisplayName("Persisting tracks along with its genres")
     public void should_saveTracksAndAlsoGenres() {
       musicGenreRepository.deleteByName("breakcore");
@@ -96,6 +126,7 @@ public class MusicTrackTest {
       List<MusicGenre> musicGenres = mongoTemplate.find(query, MusicGenre.class);
       assertThat(track.getGenres()).containsAll(musicGenres);
       musicTrackRepository.deleteById(track.getId());
+      musicGenres.forEach(genre -> musicGenreRepository.delete(genre));
     }
 
   }

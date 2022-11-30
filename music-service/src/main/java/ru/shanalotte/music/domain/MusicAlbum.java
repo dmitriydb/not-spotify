@@ -17,7 +17,14 @@ public class MusicAlbum extends BasicEntity {
 
   private @NonNull String name;
 
-  @DocumentReference
+  @DocumentReference(collection = "music_tracks")
   private Set<MusicTrack> tracks = new HashSet<>();
 
+  public void addTrack(MusicTrack track) {
+    this.tracks.add(track);
+  }
+
+  public boolean hasTrack(MusicTrack track) {
+    return this.tracks.contains(track);
+  }
 }

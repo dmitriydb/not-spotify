@@ -1,4 +1,4 @@
-package ru.shanalotte.test.annotation;
+package ru.shanalotte.music.test.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

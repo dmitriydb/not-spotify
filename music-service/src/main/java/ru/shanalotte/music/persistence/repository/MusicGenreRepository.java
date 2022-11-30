@@ -7,6 +7,6 @@ import ru.shanalotte.music.domain.MusicGenre;
 
 @Repository
 public interface MusicGenreRepository extends MongoRepository<MusicGenre, String> {
-  Set<MusicGenre> findByName(String name);
+  MusicGenre findByName(String name);
   void deleteByName(String name);
 }

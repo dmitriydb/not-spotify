@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -15,9 +16,14 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 @ToString(callSuper = true)
 public class MusicBand extends BasicEntity {
 
-  private @NonNull String name;
+  @NonNull
+  @Indexed(unique = true)
+  private String name;
 
-  @DocumentReference
+  @DocumentReference(collection = "music_albums")
   private Set<MusicAlbum> albums = new HashSet<>();
 
+  public void addAlbum(MusicAlbum album) {
+    this.albums.add(album);
+  }
 }

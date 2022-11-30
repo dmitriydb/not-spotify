@@ -1,18 +1,35 @@
 package ru.shanalotte.music.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import ru.shanalotte.music.persistence.repository.MusicGenreRepository;
-import ru.shanalotte.test.annotation.IntegrationTest;
+import ru.shanalotte.music.test.annotation.IntegrationTest;
 
 @SpringBootTest
 public class MusicGenreTest {
+
+  @Nested
+  @DisplayName("Comparing")
+  class Comparing {
+
+    @DisplayName("Two genres with different id should be equal")
+    @Test
+    public void should_be_Equal() {
+      var genre1 = new MusicGenre("rock");
+      var genre2 = new MusicGenre("rock");
+      assertEquals(genre1, genre2);
+      assertNotEquals(genre1.getId(), genre2.getId());
+    }
+  }
 
   @Nested
   @DisplayName("Persisting genres with Mongo DB")
@@ -26,9 +43,9 @@ public class MusicGenreTest {
     public void should_Save() {
       var musicGenre = new MusicGenre("breakcore");
       musicGenreRepository.save(musicGenre);
-      assertEquals(musicGenreRepository.findByName("breakcore").stream().findFirst().get().getId(), musicGenre.getId());
+      assertEquals(musicGenreRepository.findByName("breakcore").getId(), musicGenre.getId());
       musicGenreRepository.deleteByName("breakcore");
-      assertTrue(musicGenreRepository.findByName("breakcore").stream().findFirst().isEmpty());
+      assertNull(musicGenreRepository.findByName("breakcore"));
     }
 
     @DisplayName("Should not create two breakcore genres together")

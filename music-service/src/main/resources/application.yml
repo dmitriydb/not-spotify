@@ -5,3 +5,8 @@ spring:
       database: spotify
       auto-index-creation: true
       host: localhost
+logging:
+  level:
+    ru.shanalotte: debug
+server:
+  port: 12345
