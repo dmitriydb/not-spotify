@@ -6,18 +6,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
-
+@Document("music_albums")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
 public class MusicAlbum extends BasicEntity {
-  private @NonNull String name;
-  private Set<MusicTrack> tracks = new HashSet<>();
 
-  public MusicAlbum(@NonNull long id, @NonNull String name) {
-    super(id);
-    this.name = name;
-  }
+  private @NonNull String name;
+
+  @DocumentReference
+  private Set<MusicTrack> tracks = new HashSet<>();
 
 }
