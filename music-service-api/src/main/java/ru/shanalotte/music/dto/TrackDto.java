@@ -26,15 +26,17 @@ public class TrackDto {
     this.band = null;
   }
 
-  @NotNull
-  String name;
+  private String id;
 
   @NotNull
-  int length;
+  private String name;
 
-  Set<String> genres = new HashSet<>();
+  @NotNull
+  private int length;
 
-  String album;
+  private Set<String> genres = new HashSet<>();
 
-  String band;
+  private String album;
+
+  private String band;
 }

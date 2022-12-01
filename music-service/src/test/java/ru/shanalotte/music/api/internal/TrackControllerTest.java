@@ -43,7 +43,7 @@ public class TrackControllerTest {
   private GenreHelper genreHelper;
 
   @Autowired
-  private TrackController trackController;
+  private TrackUploadController trackController;
 
   @AfterEach
   public void dropDatabase() {

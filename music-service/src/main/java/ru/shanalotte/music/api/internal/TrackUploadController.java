@@ -22,7 +22,7 @@ import ru.shanalotte.music.service.track.TrackCreationService;
 
 @RestController
 @RequiredArgsConstructor
-public class TrackController {
+public class TrackUploadController {
 
   private final BandCreationService bandCreationService;
   private final AlbumCreationService albumCreationService;

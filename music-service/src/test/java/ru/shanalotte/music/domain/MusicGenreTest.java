@@ -11,10 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.test.context.ActiveProfiles;
 import ru.shanalotte.music.persistence.repository.MusicGenreRepository;
 import ru.shanalotte.music.test.annotation.IntegrationTest;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class MusicGenreTest {
 
   @Nested
