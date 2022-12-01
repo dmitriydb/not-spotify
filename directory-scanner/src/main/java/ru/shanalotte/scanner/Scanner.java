@@ -1,0 +1,93 @@
+package ru.shanalotte.scanner;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.ComponentScan;
+import ru.shanalotte.music.dto.TrackDto;
+
+@SpringBootApplication
+@EnableEurekaClient
+@ComponentScan("ru.shanalotte.scanner")
+@RequiredArgsConstructor
+public class Scanner implements CommandLineRunner {
+
+  private final MusicServiceProxy musicServiceProxy;
+
+  public static void main(String[] args) throws InvalidDataException, UnsupportedTagException, IOException {
+    SpringApplication.run(Scanner.class, args);
+  }
+
+  @Override
+  public void run(String... args) throws Exception {
+    args = new String[]{"D:\\songs"};
+    if (args.length == 0) {
+      sayBye();
+    }
+    String rootDirectory = args[0];
+    File file = new File(rootDirectory);
+    if (!file.isDirectory()) {
+      sayBye();
+    }
+    toMp3Files(file)
+        .stream().map(Scanner::toTrackDto)
+        .forEach(musicServiceProxy::createTrack);
+  }
+
+  private static Set<File> toMp3Files(File rootDirectory) {
+    Set<File> files = new HashSet<>();
+    Queue<File> subDirectories = new LinkedList<>();
+    subDirectories.add(rootDirectory);
+    while (!subDirectories.isEmpty()) {
+      File directory = subDirectories.poll();
+      for (File subFile : directory.listFiles()) {
+        if (subFile.isDirectory()) {
+          subDirectories.add(subFile);
+        } else if (subFile.getAbsolutePath().endsWith(".mp3")){
+          files.add(subFile);
+        }
+      }
+    }
+    return files;
+  }
+
+  @SneakyThrows
+  private static TrackDto toTrackDto(File file) {
+    Mp3File mp3File = new Mp3File(file);
+    TrackDto dto = new TrackDto();
+    var tag = mp3File.getId3v1Tag();
+    if (tag == null) {
+      tag = mp3File.getId3v2Tag();
+    }
+    if (tag != null) {
+      dto.setName(tag.getTitle());
+      dto.setAlbum(tag.getAlbum());
+      dto.setBand(tag.getArtist());
+      dto.setGenres(Set.of(tag.getGenreDescription()));
+      dto.setLength((int) mp3File.getLengthInSeconds());
+    }
+    if (dto.getName() == null) {
+      dto.setName(file.getName().replace(".mp3", ""));
+    }
+    return dto;
+  }
+
+  private static void sayBye() {
+    System.out.println("Usage: scanner <root directory>");
+    System.exit(0);
+  }
+
+}
+

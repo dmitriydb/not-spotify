@@ -46,9 +46,11 @@ public class TrackController {
     } else {
       newTrack = trackCreationService.create(newTrack);
     }
+    CreatedTrackDto createdTrackDto = new CreatedTrackDto();
+    createdTrackDto.setId(newTrack.getId());
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .body(new CreatedTrackDto(newTrack.getId()));
+        .body(createdTrackDto);
   }
 
 }

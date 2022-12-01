@@ -1,8 +1,13 @@
 package ru.shanalotte.music.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
-@Value
+@Data
+@NoArgsConstructor
 public class CreatedTrackDto {
-  String id;
+  @NonNull String id;
 }

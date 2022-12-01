@@ -1,5 +1,6 @@
 package ru.shanalotte.music.dto;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class TrackDto {
   @NotNull
   int length;
 
-  Set<String> genres;
+  Set<String> genres = new HashSet<>();
 
   String album;
 
