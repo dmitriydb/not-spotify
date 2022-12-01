@@ -1,6 +1,8 @@
+server:
+  port: 8888
 spring:
   application:
-    name: music-service
+    name: user-service
   output:
     ansi:
       enabled: ALWAYS
@@ -13,8 +15,6 @@ spring:
 logging:
   level:
     ru.shanalotte: debug
-server:
-  port: 12345
 eureka:
   client:
     serviceUrl:
