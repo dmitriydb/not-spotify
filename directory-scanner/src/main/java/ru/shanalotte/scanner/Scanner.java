@@ -14,12 +14,14 @@ import lombok.SneakyThrows;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.ComponentScan;
 import ru.shanalotte.music.dto.TrackDto;
 
 @SpringBootApplication
 @EnableEurekaClient
+@EnableCircuitBreaker
 @ComponentScan("ru.shanalotte.scanner")
 @RequiredArgsConstructor
 public class Scanner implements CommandLineRunner {
