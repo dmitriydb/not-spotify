@@ -3,3 +3,10 @@ server:
 spring:
   application:
     name: gateway-api
+  mvc:
+    static-path-pattern: /content/**
+  web:
+    resources:
+      static-locations:
+        - file:///D:/covers
+        - file:///D:/songs
