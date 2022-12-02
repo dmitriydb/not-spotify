@@ -1,0 +1,34 @@
+.album-data {
+    width: 100%;
+    height: 40%;
+}
+
+p {
+}
+
+.p-album-title {
+    font-size: 150%;
+    font-family: Biotif;
+    color: #FFFDFE;
+    margin-top: 20px;
+    margin-bottom: 0%;
+}
+
+.p-band-title {
+    font-weight: bold;
+    font-size: 100%;
+    color: #928C8E;
+    margin-bottom: 0%;
+}
+
+.p-songs-count {
+    font-size: 90%;
+    font-weight: bold;
+    color: green;
+}  
+
+
+@font-face {
+    font-family: "Biotif";
+    src: url("../public/fonts/biotif-semibolditalic.ttf");
+    }

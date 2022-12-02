@@ -16,6 +16,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,6 +39,7 @@ public class TrackController {
 
   @SneakyThrows
   @GetMapping("/track")
+  @CrossOrigin("http://localhost:3000")
   @HystrixCommand(fallbackMethod = "inCaseOfFail")
   public ResponseEntity<GatewayResponseDto> getAllTracks() {
     InstanceInfo musicService = eurekaClient.getNextServerFromEureka("MUSIC-SERVICE", false);

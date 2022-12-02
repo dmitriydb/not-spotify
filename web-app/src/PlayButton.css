@@ -1,0 +1,6 @@
+.play-button {
+    display: inline;
+    width: 4.5%;
+    margin-left: 10px;
+    cursor: pointer;
+}
