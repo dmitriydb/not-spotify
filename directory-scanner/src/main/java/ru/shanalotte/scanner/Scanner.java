@@ -1,11 +1,15 @@
 package ru.shanalotte.scanner;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -46,6 +50,7 @@ public class Scanner implements CommandLineRunner {
     toMp3Files(file)
         .stream().map(Scanner::toTrackDto)
         .forEach(musicServiceProxy::createTrack);
+
   }
 
   private static Set<File> toMp3Files(File rootDirectory) {
@@ -69,6 +74,14 @@ public class Scanner implements CommandLineRunner {
   private static TrackDto toTrackDto(File file) {
     Mp3File mp3File = new Mp3File(file);
     TrackDto dto = new TrackDto();
+    var tag2 = mp3File.getId3v2Tag();
+    if (tag2 != null && tag2.getAlbumImage() != null) {
+      String albumCoverPath = "D:\\covers\\" + UUID.randomUUID() + ".jpg";
+      try (FileOutputStream fos = new FileOutputStream(albumCoverPath)) {
+        fos.write(tag2.getAlbumImage());
+      }
+      dto.setAlbumCover(albumCoverPath);
+    }
     var tag = mp3File.getId3v1Tag();
     if (tag == null) {
       tag = mp3File.getId3v2Tag();
@@ -77,12 +90,14 @@ public class Scanner implements CommandLineRunner {
       dto.setName(tag.getTitle());
       dto.setAlbum(tag.getAlbum());
       dto.setBand(tag.getArtist());
-      dto.setGenres(Set.of(tag.getGenreDescription()));
+      Set<String> genres = Arrays.stream(tag.getGenreDescription().split("/")).map(genre -> genre.trim()).collect(Collectors.toSet());
+      dto.setGenres(genres);
       dto.setLength((int) mp3File.getLengthInSeconds());
     }
     if (dto.getName() == null) {
       dto.setName(file.getName().replace(".mp3", ""));
     }
+    dto.setMp3File(file.getAbsolutePath());
     return dto;
   }
 

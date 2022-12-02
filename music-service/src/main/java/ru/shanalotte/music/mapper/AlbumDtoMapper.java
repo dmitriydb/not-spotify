@@ -11,7 +11,9 @@ public class AlbumDtoMapper implements DtoMapper<AlbumDto, MusicAlbum> {
 
   @Override
   public AlbumDto toDto(MusicAlbum album) {
-    return new AlbumDto(album.getId(), album.getName());
+    AlbumDto dto = new AlbumDto(album.getId(), album.getName());
+    dto.setAlbumCover(album.getAlbumCover());
+    return dto;
   }
 
 }

@@ -11,5 +11,6 @@ import lombok.RequiredArgsConstructor;
 public class AlbumDto {
   private @NonNull String id;
   private @NonNull String name;
+  private String albumCover;
 }
 

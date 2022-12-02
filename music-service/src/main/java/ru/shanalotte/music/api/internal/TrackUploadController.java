@@ -36,6 +36,8 @@ public class TrackUploadController {
     MusicAlbum album = dto.getAlbum() != null ? albumCreationService.createIfNeeded(band, dto.getAlbum()) : null;
     Set<MusicGenre> musicGenres = genreCreationService.createGenresIfNeeded(dto.getGenres());
     MusicTrack newTrack = new MusicTrack(dto.getName(), dto.getLength());
+    newTrack.setAlbumCover(dto.getAlbumCover());
+    newTrack.setFilePath(dto.getMp3File());
     newTrack.setGenres(musicGenres);
     if (band != null) {
       newTrack.setBandName(band.getName());
@@ -48,6 +50,9 @@ public class TrackUploadController {
     }
     CreatedTrackDto createdTrackDto = new CreatedTrackDto();
     createdTrackDto.setId(newTrack.getId());
+    if (album != null && dto.getAlbumCover() != null) {
+      albumUpdateService.setAlbumCover(album, dto.getAlbumCover());
+    }
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(createdTrackDto);

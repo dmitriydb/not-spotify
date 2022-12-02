@@ -39,4 +39,8 @@ public class TrackDto {
   private String album;
 
   private String band;
+
+  private String albumCover;
+
+  private String mp3File;
 }

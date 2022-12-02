@@ -29,6 +29,8 @@ public class AlbumUpdateService {
           .findFirst()
           .get();
       existingTrack.addGenres(newTrack.getGenres());
+      existingTrack.setFilePath(newTrack.getFilePath());
+      existingTrack.setAlbumCover(newTrack.getAlbumCover());
       log.debug("Track has following genres {} before update", newTrack.getGenres());
       mongoTemplate.save(existingTrack);
       return existingTrack;
@@ -40,6 +42,11 @@ public class AlbumUpdateService {
       musicTrackRepository.save(newTrack);
       return newTrack;
     }
+  }
+
+  public MusicAlbum setAlbumCover(MusicAlbum album, String cover) {
+    album.setAlbumCover(cover);
+    return musicAlbumRepository.save(album);
   }
 
 }

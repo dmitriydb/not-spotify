@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 public class MusicAlbum extends BasicEntity {
 
   private @NonNull String name;
+  private String albumCover;
 
   @DocumentReference(collection = "music_tracks")
   private Set<MusicTrack> tracks = new HashSet<>();

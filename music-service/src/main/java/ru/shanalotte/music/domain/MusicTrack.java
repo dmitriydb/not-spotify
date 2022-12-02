@@ -22,6 +22,8 @@ public class MusicTrack extends BasicEntity {
   private @NonNull int length;
   private String bandName;
   private String albumName;
+  private String filePath;
+  private String albumCover;
 
   @DocumentReference(collection = "music_genres")
   private Set<MusicGenre> genres = new HashSet<>();
