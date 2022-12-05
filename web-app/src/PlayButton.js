@@ -5,12 +5,15 @@ class PlayButton extends React.Component {
 
 
     render() {
-        console.log("Playbutoon callback = " + this.props.changeSongCallBack);
+        var icon = "img/song-playing.png";
 
+        if (this.props.song == this.props.currentSong) {
+            icon = "img/play-button.png";
+        }
         return (
             <>
-                <div className="play-button" onClick={() => {this.props.changeSongCallBack(this.props.song)}}>   
-                    <img src="img/play-button.png" ></img>
+                <div className="play-button">   
+                    <img src={icon} ></img>
                 </div>
             </>
         );

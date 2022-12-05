@@ -1,7 +1,8 @@
 .song-info {
     display: inline;
-    width: 78.5%;
+    width: 68.5%;
     margin-left: 10px;
+    cursor: pointer;
 }
 
 .song-title {
@@ -17,6 +18,21 @@
     color: #928C8E;
     font-size: 90%;
     font-weight: bold;
+}
+
+.song-title-active {
+    font-size: 110%;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    font-family: Biotif;
+    color: aquamarine;
+}
+
+.band-title-active {
+    color: #928C8E;
+    font-size: 90%;
+    font-weight: bold;
+    color: brown;
 }
 
 @font-face {

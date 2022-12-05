@@ -4,6 +4,8 @@ import PlayButton from "./PlayButton";
 import SongInfo from "./SongInfo";
 import SongInfoButton from "./SongInfoButton";
 import SongLength from "./SongLength";
+import AddToPlaylistButton from "./AddToPlaylistButton";
+import LikeButton from "./LikeButton";
 
 class SongItem extends React.Component {
 
@@ -16,8 +18,6 @@ class SongItem extends React.Component {
     }
 
     render() {
-        console.log("Song Item callback = " + this.props.changeSongCallBack);
-        console.log(this.props.song)
         var title = ""
         var band = "";
         var length = 0;
@@ -26,12 +26,16 @@ class SongItem extends React.Component {
             band = this.props.song.band
             length = this.convertLength(this.props.song.length)
         }
+        console.log("Current song is = " + JSON.stringify(this.props.currentSong));
 
+        var isActive = (this.props.currentSong == this.props.song);
         return (
             <>
-                <div className="song-item">   
-                    <PlayButton song={this.props.song} changeSongCallBack={this.props.changeSongCallBack}/>
-                    <SongInfo title={title} band={band}/>
+                <div className="song-item" onClick={() => {this.props.changeSongCallBack(this.props.song)}}>   
+                    <PlayButton currentSong={this.props.currentSong} song={this.props.song} />
+                    <SongInfo active={isActive} title={title} band={band}/>
+                    <LikeButton/>
+                    <AddToPlaylistButton/>
                     <SongInfoButton/>
                     <SongLength length={length}/>
                 </div>

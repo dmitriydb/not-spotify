@@ -8,7 +8,7 @@ class SongLength extends React.Component {
         return (
             <>
                 <div className="song-length">   
-                    <p className="p-song-length">{this.props.length}</p>
+                    <p align="center" className="p-song-length">{this.props.length}</p>
                 </div>
             </>
         );

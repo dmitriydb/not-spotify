@@ -5,7 +5,5 @@
     color: wheat;
     display: flex;
     align-items: center;
-}
-
-div {
+    cursor: pointer;
 }

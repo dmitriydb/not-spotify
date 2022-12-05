@@ -4,18 +4,28 @@ import "./AlbumCover.css"
 class AlbumCover extends React.Component {
 
     render() {
-        var cover = String(this.props.cover);
-    
-        //D:\covers\008318e1-9c3b-4fc7-825f-d77ac9c7af1c.jpg
-        cover = cover.replace("D:\\covers\\", "http://localhost:44144/content/");
-        console.log("Current cover is " + cover);
-        return (
-            <>
-                <div className="album-cover">
-                    <img src={cover}></img>
-                </div>
-            </>
-        );
+        var cover = this.props.cover;
+        if (cover) {
+            cover = String(cover).replace("D:\\covers\\", "http://localhost:44144/content/");
+        }
+        if (cover) {
+            console.log ("IS COVER");
+            return (
+                <>
+                    <div className="album-cover">
+                        <img width="400" height="400" src={cover}></img>
+                    </div>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <div className="album-cover">
+                    </div>
+                </>
+            );
+        }
+       
     }
 }
 

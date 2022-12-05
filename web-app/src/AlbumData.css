@@ -7,28 +7,58 @@ p {
 }
 
 .p-album-title {
-    font-size: 150%;
+    font-size: 170%;
     font-family: Biotif;
     color: #FFFDFE;
-    margin-top: 20px;
     margin-bottom: 0%;
 }
 
 .p-band-title {
     font-weight: bold;
-    font-size: 100%;
+    font-size: 120%;
     color: #928C8E;
     margin-bottom: 0%;
 }
 
 .p-songs-count {
+    font-family: Commons;
+    margin-top: 20px;
+    margin-bottom: 5px;
     font-size: 90%;
-    font-weight: bold;
-    color: green;
+    font-style: italic;
+    color: greenyellow;
 }  
+
+.genre-text {
+    margin-top: 5px;
+    margin-left: 15px;
+    color: #928C8E;
+    font-size: 65%;
+    font-weight: bold;
+    font-family: Avanti;
+    margin-bottom: 0px;
+}
+
 
 
 @font-face {
     font-family: "Biotif";
     src: url("../public/fonts/biotif-semibolditalic.ttf");
     }
+
+    
+    @font-face {
+        font-family: "Commons";
+        src: url("../public/fonts/tt-commons.otf");
+        }
+    
+    
+        
+
+    @font-face {
+        font-family: "Avanti";
+        src: url("../public/fonts/avanti.ttf");
+        }
+    
+    
+        

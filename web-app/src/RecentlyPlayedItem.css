@@ -1,33 +1,3 @@
-.menu {
-    width: 15%;
-    background-color: black;
-    padding-top: 15px;
-}
-
-
-.menu-item {
-    font-size: 110%;
-    margin-top: 5px;
-    margin-left: 15px;
-    font-weight: bold;
-    margin-bottom: 0px;
-    font-family: Commons;
-    color: #807F7D;
-    cursor: pointer;
-}
-
-.menu-caption {
-    margin-left: 15px;
-    color: #807F7D;
-    font-size: 70%;
-    font-weight: bold;
-    font-family: Avanti;
-    margin-bottom: 5px;
-}
-
-hr {
-    color: white;
-}
 .recently-played-song {
     margin-left: 15px;
     color: bisque;
