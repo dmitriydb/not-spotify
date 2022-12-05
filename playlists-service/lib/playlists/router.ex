@@ -88,7 +88,7 @@ defmodule Playlists.Router do
     end
   end
 
-  put "playlist" do
+  put "playlist/song" do
     case conn.body_params do
       %{"playlist_id" => playlist_id, "song_id" => song_id} ->
         case Mongo.find_one_and_update(
@@ -97,6 +97,38 @@ defmodule Playlists.Router do
                %{_id: BSON.ObjectId.decode!(playlist_id)},
                %{
                  "$addToSet" => %{songs: song_id}
+               },
+               return_document: :after
+             ) do
+          {:ok, doc} ->
+            case doc do
+              nil ->
+                send_resp(conn, 404, "Not Found")
+              _ ->
+                post =
+                  JSON.normaliseMongoId(doc)
+                  |> Jason.encode!()
+                conn
+                |> put_resp_content_type("application/json")
+                |> send_resp(200, post)
+            end
+          {:error, _} ->
+            send_resp(conn, 500, "Something went wrong")
+        end
+      _ ->
+        send_resp(conn, 400, '')
+    end
+  end
+
+  delete "playlist/song" do
+    case conn.body_params do
+      %{"playlist_id" => playlist_id, "song_id" => song_id} ->
+        case Mongo.find_one_and_update(
+               :mongo,
+               @playlists,
+               %{_id: BSON.ObjectId.decode!(playlist_id)},
+               %{
+                 "$pull" => %{songs: song_id}
                },
                return_document: :after
              ) do
