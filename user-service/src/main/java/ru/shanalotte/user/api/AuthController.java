@@ -40,8 +40,8 @@ public class AuthController {
   }
 
   @PostMapping("/auth")
-  public ResponseEntity login(@RequestBody AuthDto requestDto) {
-    logger.info("Usernname {} trying to get token", requestDto.getUsername());
+  public ResponseEntity<?> login(@RequestBody AuthDto requestDto) {
+    logger.info("Username {} trying to get token", requestDto.getUsername());
     try {
       String username = requestDto.getUsername();
       authenticationManager.authenticate(
