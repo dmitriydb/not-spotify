@@ -1,0 +1,99 @@
+/* Full-width input fields */
+input[type=text],
+input[type=password] {
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: black;
+}
+
+
+/* Change the white to any color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px black inset !important;
+}
+
+/* Set a style for all buttons */
+button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+    padding: 14px 20px;
+    background-color: #f44336;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.cancelbtn,
+.signupbtn {
+    font-family: Commons;
+    float: left;
+    width: 50%;
+}
+
+input[type="text"], textarea {
+
+    background-color : black; 
+  
+  }
+
+.my-label {
+    font-family: Biotif;
+    font-weight: bold;
+    color: white;
+}
+
+.my-input {
+    background-color: black;
+    font-family: Biotif;
+    color: white;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+::placeholder {
+    text-align: center; 
+ }
+
+.modal-content {
+    width: 300px;
+    background-color: black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+@font-face {
+    font-family: "Biotif";
+    src: url("../public/fonts/biotif-semibolditalic.ttf");
+}
+
+
+@font-face {
+    font-family: "Commons";
+    src: url("../public/fonts/tt-commons.otf");
+}
+
+
+
+
+@font-face {
+    font-family: "Avanti";
+    src: url("../public/fonts/avanti.ttf");
+}

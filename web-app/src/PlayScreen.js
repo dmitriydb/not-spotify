@@ -9,14 +9,10 @@ class PlayScreen extends React.Component {
         super(props);
         this.state = {songs : [], currentSong: {}, history: []}
         const http = new XMLHttpRequest()
-
         this.changeSong = this.changeSong.bind(this);
-
         http.open("GET", "http://localhost:44144/random/10")
         http.send()
-        
         this.getState();
-
     }
 
     changeSong(song, noHistory = false) {

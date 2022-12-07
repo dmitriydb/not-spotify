@@ -29,7 +29,6 @@ defmodule Playlists.Router do
       |> Enum.to_list()
       # Encode the list to a JSON string
       |> Jason.encode!()
-
     conn
     |> put_resp_content_type("application/json")
     # Send a 200 OK response with the posts in the body
