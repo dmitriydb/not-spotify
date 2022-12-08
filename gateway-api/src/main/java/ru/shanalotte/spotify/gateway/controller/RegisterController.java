@@ -10,6 +10,7 @@ import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import ru.shanalotte.user.dto.RegistrationDto;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class RegisterController {
 
   private final EurekaClient eurekaClient;
@@ -35,6 +37,7 @@ public class RegisterController {
     HttpClient httpClient = HttpClient.newBuilder().build();
     HttpRequest request = buildRequest(uri, objectMapper.writeValueAsString(registrationDto));
     HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    log.info("{} {}", response.statusCode(), response.body());
     return ResponseEntity.status(response.statusCode())
         .body(response.body());
   }

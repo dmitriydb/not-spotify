@@ -8,12 +8,65 @@ class Menu extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { signingUp: false };
+        this.state = { signingUp: false, status: "" };
         this.closeSignup = this.closeSignup.bind(this);
         this.openSignup = this.openSignup.bind(this);
         this.closeSignin = this.closeSignin.bind(this);
         this.openSignin = this.openSignin.bind(this);
+        this.usernameInput = React.createRef();
+        this.passwordInput = React.createRef();
+        this.passwordInput2 = React.createRef();
+        this.validateRegisterData = this.validateRegisterData.bind(this);
+        this.validateAuthData = this.validateAuthData.bind(this);
+        this.processRegistrationResponse = this.processRegistrationResponse.bind(this);
+    }
 
+    validateRegisterData() {
+        var username = this.usernameInput.current.value;
+        var password = this.passwordInput.current.value;
+        var passwordAgain = this.passwordInput2.current.value;
+        if (!username) {
+            this.setState({ status: "Username is empty" });
+        } else if (!password || !passwordAgain) {
+            this.setState({ status: "Input both passwords" });
+        } else if (password != passwordAgain) {
+            this.setState({ status: "Passwords should match" });
+        } else {
+            this.props.processRegistration({ username, password })
+                .then(response => this.processRegistrationResponse(response));
+        }
+    }
+
+    validateAuthData() {
+        var username = this.usernameInput.current.value;
+        var password = this.passwordInput.current.value;
+        if (!username) {
+            this.setState({ status: "Username is empty" });
+        } else if (!password) {
+            this.setState({ status: "Password is empty" });
+        } else {
+            this.props.processAuth({ username, password })
+                .then(response => this.processRegistrationResponse(response));
+        }
+    }
+
+    processRegistrationResponse(response) {
+        if (response.status == 409) {
+            this.setState({ status: "Username already exists" });
+        }
+        else if (response.status == 403) {
+            this.setState({ status: "Wrong username/password" });
+        }
+        else if (response.status == 200) {
+            response.json()
+                .then(data => {
+                    this.props.passAuthToken(data);
+                    this.closeSignup();
+                    this.closeSignin();
+                });
+        } else {
+            this.setState({ status: "Error has occurred, try again please" });
+        }
     }
 
     closeSignup() {
@@ -32,7 +85,6 @@ class Menu extends React.Component {
         this.setState({ signingIn: true });
     }
 
-
     render() {
         var recently = [];
         for (var song of this.props.history) {
@@ -45,10 +97,23 @@ class Menu extends React.Component {
                 <div className="menu">
                     <p className="menu-item">Home</p>
                     <p className="menu-item">Search</p>
-                    <p className="menu-item" onClick={this.openSignup}>Sign up</p>
-                    <p className="menu-item" onClick={this.openSignin}>Sign in</p>
-                    <p className="menu-item">Playlists</p>
-                    <p className="menu-item">Favorites</p>
+                    {
+                        !this.props.authCompleted &&
+                        <>
+                            <p className="menu-item" onClick={this.openSignup}>Sign up</p>
+                            <p className="menu-item" onClick={this.openSignin}>Sign in</p>
+                        </>
+                    }
+                    {
+                        this.props.authCompleted &&
+                        <>
+                            <p className="menu-item">Playlists</p>
+                            <p className="menu-item">Favorites</p>
+                            <p className="menu-item" onClick={this.props.resetAuth}>Sign off</p>
+                            <p className="greetings">{"Hi, " + this.props.username + "!"}</p>
+                            
+                        </>
+                    }
                     <hr></hr>
                     <p className="menu-caption">Recently played</p>
                     {recently}
@@ -61,20 +126,19 @@ class Menu extends React.Component {
                     className="modal-content"
                 >
                     <label className="my-label" align="center" htmlFor="username"><b>Username</b></label>
-                    <input autocomplete="chrome-off" className="my-input" type="text" placeholder="Enter username" name="username" required />
+                    <input autocomplete="chrome-off" className="my-input" type="text" placeholder="Enter username" name="username" required ref={this.usernameInput} />
                     <label className="my-label" align="center" htmlFor="psw"><b>Password</b></label>
                     <input data-lpignore="true"
-                        autocomplete="chrome-off" className="my-input" type="password" placeholder="Enter password" name="psw" required />
+                        className="my-input" type="password" placeholder="Enter password" name="psw" required ref={this.passwordInput} autocomplete="new-password"/>
                     <label className="my-label" align="center" htmlFor="psw-repeat"><b>Repeat Password</b></label>
                     <input data-lpignore="true"
-                        autocomplete="chrome-off" className="my-input" type="password" placeholder="Repeat password" name="psw-repeat" required />
+                        className="my-input" type="password" placeholder="Repeat password" name="psw-repeat" required ref={this.passwordInput2} autocomplete="new-password"/>
+                    <label className="my-label" align="center"><b>{this.state.status}</b></label>
                     <div className="buttons">
                         <button type="button" className="cancelbtn" onClick={this.closeSignup}>Cancel</button>
-                        <button type="submit" className="signupbtn">Sign up</button>
+                        <button type="submit" className="signupbtn" onClick={this.validateRegisterData}>Sign up</button>
                     </div>
-
                 </Modal>
-
                 <Modal
                     isOpen={this.state.signingIn}
                     onRequestClose={this.closeSignin}
@@ -82,18 +146,16 @@ class Menu extends React.Component {
                     className="modal-content"
                 >
                     <label className="my-label" align="center" htmlFor="username"><b>Username</b></label>
-                    <input autocomplete="chrome-off" className="my-input" type="text" placeholder="Enter username" name="username" required />
+                    <input autocomplete="chrome-off" className="my-input" type="text" placeholder="Enter username" name="username" required ref={this.usernameInput}/>
                     <label className="my-label" align="center" htmlFor="psw"><b>Password</b></label>
                     <input data-lpignore="true"
-                        autocomplete="chrome-off" className="my-input" type="password" placeholder="Enter password" name="psw" required />
+                        autocomplete="new-password" className="my-input" type="password" placeholder="Enter password" name="psw" required ref={this.passwordInput}/>
+                    <label className="my-label" align="center"><b>{this.state.status}</b></label>
                     <div className="buttons">
                         <button type="button" className="cancelbtn" onClick={this.closeSignin}>Cancel</button>
-                        <button type="submit" className="signupbtn">Sign in</button>
+                        <button type="submit" className="signupbtn" onClick={this.validateAuthData}>Sign in</button>
                     </div>
-
                 </Modal>
-
-
             </>
         );
     }

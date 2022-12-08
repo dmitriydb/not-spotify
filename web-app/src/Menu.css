@@ -16,6 +16,17 @@
     cursor: pointer;
 }
 
+.greetings {
+    font-size: 110%;
+    margin-top: 5px;
+    margin-left: 15px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    font-family: Commons;
+    color: yellowgreen;
+    cursor: pointer;
+}
+
 .menu-caption {
     margin-left: 15px;
     color: #807F7D;

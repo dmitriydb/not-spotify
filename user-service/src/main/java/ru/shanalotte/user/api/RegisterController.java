@@ -7,9 +7,11 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,14 +38,16 @@ public class RegisterController {
     this.passwordEncoder = passwordEncoder;
   }
 
+
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody @Valid RegistrationDto requestDto) {
     logger.info("Registration attempt {}", requestDto.getUsername());
       String username = requestDto.getUsername();
       User existingUser = userRepository.findByUsername(username);
       if (existingUser != null) {
-        logger.error("User {} is already registered", requestDto.getUsername());
-        throw new UsernameNotFoundException("User with username: " + username + " is already registered");
+        logger.info("User {} is already registered", requestDto.getUsername());
+        logger.info("{}", HttpStatus.CONFLICT.value());
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
       }
       String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
       logger.debug("Encoded password is {}", encodedPassword);

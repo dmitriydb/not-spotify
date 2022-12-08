@@ -7,12 +7,46 @@ class PlayScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {songs : [], currentSong: {}, history: []}
+        this.state = { songs: [], currentSong: {}, history: [], authCompleted: false }
         const http = new XMLHttpRequest()
         this.changeSong = this.changeSong.bind(this);
+        this.processRegistration = this.processRegistration.bind(this);
+        this.processAuth = this.processAuth.bind(this);
+        this.acceptAuthToken = this.acceptAuthToken.bind(this);
+        this.resetAuth = this.resetAuth.bind(this);
         http.open("GET", "http://localhost:44144/random/10")
         http.send()
         this.getState();
+    }
+
+    processRegistration(dto) {
+        return fetch('http://localhost:44144/register', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dto)
+        })
+    }
+
+    processAuth(dto) {
+        return fetch('http://localhost:44144/auth', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dto)
+        })
+    }
+
+    resetAuth() {
+        this.setState({ token: "", username: "", authCompleted: false });
+    }
+
+    acceptAuthToken({ username, token }) {
+        this.setState({ token, username, authCompleted: true })
     }
 
     changeSong(song, noHistory = false) {
@@ -27,17 +61,17 @@ class PlayScreen extends React.Component {
             mp3 = "http://localhost:44144/content/" + mp3;
             console.log("Playing " + mp3);
             var newAudio = new Audio(mp3);
-            newAudio.play(); 
+            newAudio.play();
             if (!noHistory) {
                 if (history[0] != song) {
-                    history.unshift(song);   
+                    history.unshift(song);
                 }
                 if (history.length > 5) {
                     history.pop();
                 }
             }
         }
-        this.setState({currentSong: song, audio: newAudio, history: history});
+        this.setState({ currentSong: song, audio: newAudio, history: history });
     }
 
     getState() {
@@ -50,15 +84,17 @@ class PlayScreen extends React.Component {
 
     processData(data) {
         var songs = data.payload.filter(song => song.albumCover);
-        this.setState({songs: songs, currentSong: {}})
+        this.setState({ songs: songs, currentSong: {} })
     }
 
     render() {
         return (
             <>
-                <Menu history={this.state.history} changeSongCallBack={this.changeSong}/>
-                <AlbumInfo song={this.state.currentSong}/>
-                <Songs currentSong={this.state.currentSong} songs={this.state.songs} changeSongCallBack={this.changeSong}/>
+                <Menu resetAuth={this.resetAuth} username={this.state.username} passAuthToken={this.acceptAuthToken} authCompleted={this.state.authCompleted} 
+                processAuth={this.processAuth} processRegistration={this.processRegistration} history={this.state.history} changeSongCallBack={this.changeSong}
+                />
+                <AlbumInfo song={this.state.currentSong} />
+                <Songs currentSong={this.state.currentSong} songs={this.state.songs} changeSongCallBack={this.changeSong} />
             </>
         );
     }
