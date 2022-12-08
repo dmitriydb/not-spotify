@@ -42,11 +42,11 @@ class PlayScreen extends React.Component {
     }
 
     resetAuth() {
-        this.setState({ token: "", username: "", authCompleted: false });
+        this.setState({ id: "", token: "", username: "", authCompleted: false });
     }
 
-    acceptAuthToken({ username, token }) {
-        this.setState({ token, username, authCompleted: true })
+    acceptAuthToken({ id, username, token }) {
+        this.setState({ id, token, username, authCompleted: true })
     }
 
     changeSong(song, noHistory = false) {
@@ -94,7 +94,7 @@ class PlayScreen extends React.Component {
                 processAuth={this.processAuth} processRegistration={this.processRegistration} history={this.state.history} changeSongCallBack={this.changeSong}
                 />
                 <AlbumInfo song={this.state.currentSong} />
-                <Songs currentSong={this.state.currentSong} songs={this.state.songs} changeSongCallBack={this.changeSong} />
+                <Songs userId={this.state.id} currentSong={this.state.currentSong} songs={this.state.songs} changeSongCallBack={this.changeSong} />
             </>
         );
     }

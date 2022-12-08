@@ -1,0 +1,15 @@
+.playlist-label {
+    font-family: Biotif;
+    font-weight: bold;
+    color: white;
+    width: 150px;
+    cursor: pointer;
+}
+
+.playlist-label-active {
+    font-family: Biotif;
+    font-weight: bold;
+    color: green;
+    width: 150px;
+    cursor: pointer;
+}

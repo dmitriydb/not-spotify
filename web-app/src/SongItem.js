@@ -34,8 +34,8 @@ class SongItem extends React.Component {
                 <div className="song-item" onClick={() => {this.props.changeSongCallBack(this.props.song)}}>   
                     <PlayButton currentSong={this.props.currentSong} song={this.props.song} />
                     <SongInfo active={isActive} title={title} band={band}/>
-                    <LikeButton/>
-                    <AddToPlaylistButton/>
+                    <LikeButton userId={this.props.userId}/>
+                    <AddToPlaylistButton userId={this.props.userId} song={this.props.song}/>
                     <SongInfoButton/>
                     <SongLength length={length}/>
                 </div>

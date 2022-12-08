@@ -55,6 +55,7 @@ public class AuthController {
       Map<Object, Object> response = new HashMap<>();
       response.put("username", username);
       response.put("token", token);
+      response.put("id", user.getId());
       logger.info("Successfully created JWT token for {}", requestDto.getUsername());
       return ResponseEntity.ok(response);
     } catch (AuthenticationException e) {

@@ -4,3 +4,25 @@
     margin-left: 10px;
     margin-right: -10px;
 }
+
+.modal-content-playlist {
+    width: 150px;
+    background-color: black;
+}
+
+.playlist-input {
+    width: 150px;
+    background-color: black;
+    font-family: Biotif;
+    color: white;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    border: 1px solid white;
+    cursor: pointer;
+}
+
+.playlist-label:hover {
+    color: red;
+}

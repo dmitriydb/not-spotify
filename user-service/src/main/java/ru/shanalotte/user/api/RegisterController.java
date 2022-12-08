@@ -51,12 +51,14 @@ public class RegisterController {
       }
       String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
       logger.debug("Encoded password is {}", encodedPassword);
-      User user = new User(UUID.randomUUID().toString(), requestDto.getUsername(), encodedPassword);
+      String userId = UUID.randomUUID().toString();
+      User user = new User(userId, requestDto.getUsername(), encodedPassword);
       userRepository.save(user);
       String token = jwtTokenProvider.createToken(username);
       Map<Object, Object> response = new HashMap<>();
       response.put("username", username);
       response.put("token", token);
+      response.put("id", userId);
       logger.info("Successfully created JWT token for {}", requestDto.getUsername());
       return ResponseEntity.ok(response);
   }

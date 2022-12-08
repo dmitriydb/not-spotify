@@ -5,6 +5,9 @@ defmodule Playlists.Router do
   use Plug.Router
   alias Playlists.JSONUtils, as: JSON
 
+  plug CORSPlug, origin: ["http://localhost:3000"]
+
+
   # Attach the Logger to log incoming requests
   plug(Plug.Logger)
 
