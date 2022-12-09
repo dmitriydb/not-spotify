@@ -81,8 +81,7 @@ public class TrackController {
   @CrossOrigin({"http://localhost:3000", "http://10.1.7.155:3000"})
   @HystrixCommand(fallbackMethod = "inCaseOfFail")
   public ResponseEntity<GatewayResponseDto> random10Tracks(@PathVariable("amount") int amount) {
-    var tracks = allTracks().stream()
-        .filter(track -> track.getAlbumCover() != null).collect(Collectors.toList());
+    var tracks = new ArrayList<>(allTracks());
     Collections.shuffle(tracks);
     return ResponseEntity
         .ok(new GatewayResponseDto(GatewayResponseStatus.OK,

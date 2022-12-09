@@ -21,6 +21,7 @@ class AlbumCover extends React.Component {
             return (
                 <>
                     <div className="album-cover">
+                    <img width="400" height="400" src="img/fake-album-cover.png"></img>
                     </div>
                 </>
             );

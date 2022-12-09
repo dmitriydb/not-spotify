@@ -16,6 +16,11 @@
     cursor: pointer;
 }
 
+.menu-item:hover {
+    color: red;
+
+}
+
 .greetings {
     font-size: 110%;
     margin-top: 5px;
@@ -39,6 +44,7 @@
 hr {
     color: white;
 }
+
 .recently-played-song {
     margin-left: 15px;
     color: bisque;
@@ -49,9 +55,9 @@ hr {
 }
 
 .history-item {
-     width: 100%;
-     margin-bottom: -15px;
-     cursor: pointer;
+    width: 100%;
+    margin-bottom: -15px;
+    cursor: pointer;
 }
 
 .recently-played-band {
@@ -66,20 +72,15 @@ hr {
 @font-face {
     font-family: "Biotif";
     src: url("../public/fonts/biotif-semibolditalic.ttf");
-    }
+}
 
 
-    @font-face {
-        font-family: "Commons";
-        src: url("../public/fonts/tt-commons.otf");
-        }
-    
-    
-        
+@font-face {
+    font-family: "Commons";
+    src: url("../public/fonts/tt-commons.otf");
+}
 
-    @font-face {
-        font-family: "Avanti";
-        src: url("../public/fonts/avanti.ttf");
-        }
-    
-    
+@font-face {
+    font-family: "Avanti";
+    src: url("../public/fonts/avanti.ttf");
+}

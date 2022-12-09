@@ -12,7 +12,6 @@ class Songs extends React.Component {
             content.push(<SongItem userId={this.props.userId} currentSong={this.props.currentSong} key={i} song={song} changeSongCallBack={this.props.changeSongCallBack}/>)
         }
 
-        console.log(`Now we are having ${this.props.songs.length} songs`);
 
         return (
             <>
