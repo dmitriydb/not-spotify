@@ -1,0 +1,20 @@
+var coverName = "rean cover";
+var albumName = '[Reanimation]';
+
+var album = db.getCollection("music_albums").findOne({name: albumName});
+var tracks = album.tracks;
+db.music_albums.updateOne(
+   {_id: album._id},
+   {"$set": {"albumCover": coverName}}
+);
+
+for (var track of tracks) {
+  console.log(track);
+  db.music_tracks.updateOne(
+     {_id: track},
+     {$set: {"albumCover" : coverName}}
+  )
+};
+
+db.music_tracks.find({"albumName": albumName});
+

@@ -61,8 +61,6 @@ public class ScannerLauncher implements CommandLineRunner {
     if (confirm.equals("y")) {
       dtos.forEach(musicServiceProxy::createTrack);
     }
-
-
   }
 
   private String prettify(TrackDto dto) {
