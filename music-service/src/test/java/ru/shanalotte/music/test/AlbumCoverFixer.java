@@ -25,7 +25,7 @@ public class AlbumCoverFixer {
       }
     }
     while (true) {
-
+      
     }
   }
 }

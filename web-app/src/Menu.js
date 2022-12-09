@@ -24,11 +24,32 @@ class Menu extends React.Component {
         this.getPlaylists = this.getPlaylists.bind(this);
         this.changePlaylist = this.changePlaylist.bind(this);
         this.showMenu = this.showMenu.bind(this);
+        this.removePlaylist = this.removePlaylist.bind(this);
     }
 
     changePlaylist(playlist) {
         this.props.changeSongs(playlist);
         this.showMenu();
+    }
+
+    removePlaylist(playlist) {
+        fetch('http://localhost:4000/playlist/' + playlist.id, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }            
+        }).then(response => {
+            console.log(response.status);
+            if (response.status == 200) {
+                this.setState({playlists: this.state.playlists.filter(p => p.id != playlist.id)});
+            }
+        })
+          
+
+
+
+        
     }
 
     showPlaylists() {
@@ -193,7 +214,7 @@ class Menu extends React.Component {
             var content = [];
             for (var playlist of this.state.playlists) {
                 content.push(
-                    <PlayablePlaylist key={playlist.id} playlist={playlist} changePlaylist={this.changePlaylist}></PlayablePlaylist>
+                    <PlayablePlaylist key={playlist.id} playlist={playlist} removePlaylist={this.removePlaylist} changePlaylist={this.changePlaylist}></PlayablePlaylist>
                 )
             }
             content.push(

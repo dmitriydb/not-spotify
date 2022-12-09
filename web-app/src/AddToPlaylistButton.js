@@ -69,8 +69,7 @@ class AddToPlaylistButton extends React.Component {
             },
             body: JSON.stringify(dto)
         }).then(response => response.json())
-          .then(response => { 
-            
+          .then(response => {             
             this.closeModal();
         })
     }
