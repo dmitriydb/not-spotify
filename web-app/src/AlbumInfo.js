@@ -9,7 +9,6 @@ class AlbumInfo extends React.Component {
     }
 
     render() {
-        console.log("Current song is " + JSON.stringify(this.props.song));
         return (
             <>
                 <div className="album-info">

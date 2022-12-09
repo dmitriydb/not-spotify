@@ -55,13 +55,12 @@ class AddToPlaylistButton extends React.Component {
                 'Content-Type': 'application/json'
             }
         }).then(response => response.json())
-            .then(response => { console.log("GET " + JSON.stringify(response)); this.setState({ playlists: response.filter(ex => ex.user_id == this.props.userId) }) })
+            .then(response => { this.setState({ playlists: response.filter(ex => ex.user_id == this.props.userId) }) })
     }
 
     addSongToPlaylist(playlist_id) {
         var song_id = this.props.song.id;
         var dto = { song_id, playlist_id };
-        console.log(`Adding ${song_id} to ${playlist_id}`)
         fetch('http://localhost:4000/playlist/song', {
             method: 'PUT',
             headers: {
@@ -85,15 +84,11 @@ class AddToPlaylistButton extends React.Component {
             width: "150px",
         }
         var userPlaylists = [];
-        console.log(this.props.song.id);
-        console.log(JSON.stringify(this.state.playlists));
         for (var playlist of this.state.playlists) {
             var songClassname = "playlist-label";
             if (playlist.songs.includes(this.props.song.id)) {
-                console.log(playlist.id + " contains");
                 songClassname = "playlist-label-active";
             } else {
-                console.log(playlist.id + " does not");
             }
             userPlaylists.push(
                 <Playlist playlist={playlist} addSongToPlaylist={this.addSongToPlaylist} className={songClassname}></Playlist>

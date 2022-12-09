@@ -9,7 +9,6 @@ class AlbumCover extends React.Component {
             cover = String(cover).replace("D:\\covers\\", "http://localhost:44144/content/");
         }
         if (cover) {
-            console.log ("IS COVER");
             return (
                 <>
                     <div className="album-cover">

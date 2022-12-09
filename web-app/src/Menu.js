@@ -198,7 +198,6 @@ class Menu extends React.Component {
             }
             content.push(
                 <p className="menu-item" key={1} onClick={this.showMenu}>Back</p>
-
             )
             return (
                 <>

@@ -26,7 +26,6 @@ class SongItem extends React.Component {
             band = this.props.song.band
             length = this.convertLength(this.props.song.length)
         }
-        console.log("Current song is = " + JSON.stringify(this.props.currentSong));
 
         var isActive = (this.props.currentSong == this.props.song);
         return (
