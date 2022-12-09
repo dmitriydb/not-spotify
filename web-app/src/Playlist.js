@@ -9,7 +9,7 @@ class Playlist extends React.Component {
 
     handleRightClick(e) {
         console.log("Right click!")
-        this.props.removePlaylist(this.props.playlist);
+        this.props.removeSongFromPlaylist(this.props.playlist.id);
         e.preventDefault();
 }
 

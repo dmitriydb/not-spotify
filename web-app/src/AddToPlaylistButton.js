@@ -14,6 +14,23 @@ class AddToPlaylistButton extends React.Component {
         this.playlistName = React.createRef();
         this.getPlaylists = this.getPlaylists.bind(this);
         this.addSongToPlaylist = this.addSongToPlaylist.bind(this);
+        this.removeSongFromPlaylist = this.removeSongFromPlaylist.bind(this);
+    }
+
+    removeSongFromPlaylist(playlist_id) {
+        var song_id = this.props.song.id;
+        var dto = { song_id, playlist_id };
+        fetch('http://localhost:4000/playlist/song', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dto)
+        }).then(response => response.json())
+          .then(response => {             
+            this.closeModal();
+        })
     }
 
     closeModal() {
@@ -90,7 +107,7 @@ class AddToPlaylistButton extends React.Component {
             } else {
             }
             userPlaylists.push(
-                <Playlist playlist={playlist} addSongToPlaylist={this.addSongToPlaylist} className={songClassname}></Playlist>
+                <Playlist playlist={playlist} removeSongFromPlaylist={this.removeSongFromPlaylist} addSongToPlaylist={this.addSongToPlaylist} className={songClassname}></Playlist>
             )
         }
         return (
