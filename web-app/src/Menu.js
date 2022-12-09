@@ -9,7 +9,7 @@ class Menu extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { signingUp: false, status: "", mode: "menu" };
+        this.state = { signingUp: false, status: "", mode: "menu", wasPreloaded: false};
         this.closeSignup = this.closeSignup.bind(this);
         this.openSignup = this.openSignup.bind(this);
         this.closeSignin = this.closeSignin.bind(this);
@@ -38,23 +38,25 @@ class Menu extends React.Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }            
+            }
         }).then(response => {
             console.log(response.status);
             if (response.status == 200) {
-                this.setState({playlists: this.state.playlists.filter(p => p.id != playlist.id)});
+                this.setState({ playlists: this.state.playlists.filter(p => p.id != playlist.id) });
             }
         })
-          
-
-
-
-        
     }
 
     showPlaylists() {
-        this.getPlaylists();
-        this.setState({ mode: "playlists", playlists: [] });
+        if (!this.state.wasPreloaded && this.props.preloadedPlaylists) {
+            console.log("Using preloaded playlists");
+            console.log(JSON.stringify(this.props.preloadedPlaylists));
+            this.setState({ mode: "playlists", playlists: this.props.preloadedPlaylists, wasPreloaded: true });
+        } else {
+            this.getPlaylists();
+            this.setState({ mode: "playlists", playlists: [], wasPreloaded: true});
+        }
+        
     }
 
     showMenu() {

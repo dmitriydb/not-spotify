@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,12 +29,12 @@ import ru.shanalotte.music.dto.TrackDto;
 @EnableCircuitBreaker
 @ComponentScan("ru.shanalotte.scanner")
 @RequiredArgsConstructor
-public class Scanner implements CommandLineRunner {
+public class ScannerLauncher implements CommandLineRunner {
 
   private final MusicServiceProxy musicServiceProxy;
 
   public static void main(String[] args) throws InvalidDataException, UnsupportedTagException, IOException {
-    SpringApplication.run(Scanner.class, args);
+    SpringApplication.run(ScannerLauncher.class, args);
   }
 
   @Override
@@ -42,15 +43,30 @@ public class Scanner implements CommandLineRunner {
     if (args.length == 0) {
       sayBye();
     }
+    Scanner in = new Scanner(System.in);
     String rootDirectory = args[0];
     File file = new File(rootDirectory);
     if (!file.isDirectory()) {
       sayBye();
     }
-    toMp3Files(file)
-        .stream().map(Scanner::toTrackDto)
-        .forEach(musicServiceProxy::createTrack);
+    var dtos = toMp3Files(file)
+        .stream().map(ScannerLauncher::toTrackDto)
+        .collect(Collectors.toList());
 
+    dtos.forEach(dto -> System.out.println(prettify(dto)));
+
+    System.out.println("y/n?");
+
+    String confirm = in.nextLine();
+    if (confirm.equals("y")) {
+      dtos.forEach(musicServiceProxy::createTrack);
+    }
+
+
+  }
+
+  private String prettify(TrackDto dto) {
+    return String.format("%50s %50s %50s %50s %50s %10s %50s\n", dto.getBand(), dto.getAlbum(), dto.getName(), dto.getGenres(), dto.getLength(), dto.getAlbumCover(), dto.getMp3File());
   }
 
   private static Set<File> toMp3Files(File rootDirectory) {

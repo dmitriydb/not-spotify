@@ -7,7 +7,7 @@ class PlayScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { allSongs: [], songs: [], currentSong: {}, history: [], authCompleted: false }
+        this.state = { allSongs: [], songs: [], currentSong: {}, history: [], preloadedPlaylists: null, authCompleted: false }
         if (localStorage.getItem("auth_data")) {
             var authData = JSON.parse(localStorage.getItem("auth_data"));
             this.state.id = authData.id;
@@ -17,8 +17,12 @@ class PlayScreen extends React.Component {
         }
         if (localStorage.getItem("history")) {
             var history = JSON.parse(localStorage.getItem("history"));
-            console.log(JSON.parse(localStorage.getItem(history)));
             this.state.history = history ? history : [];
+        }
+        if (localStorage.getItem("all_songs")) {
+            var allSongs = JSON.parse(localStorage.getItem("all_songs"));
+            console.log(`Preloaded ${allSongs.length} songs from the storage`);
+            this.state.allSongs = allSongs ? allSongs : [];
         }
         const http = new XMLHttpRequest()
         this.changeSong = this.changeSong.bind(this);
@@ -27,9 +31,35 @@ class PlayScreen extends React.Component {
         this.acceptAuthToken = this.acceptAuthToken.bind(this);
         this.resetAuth = this.resetAuth.bind(this);
         this.changeSongs = this.changeSongs.bind(this);
-        http.open("GET", "http://localhost:44144/random/10")
-        http.send()
-        this.getState();
+        this.preloadUserPlaylists = this.preloadUserPlaylists.bind(this);
+        if (this.state.allSongs && this.state.allSongs.length >= 10) {
+            console.log("Preloading random songs from local storage");
+            const shuffled = this.state.allSongs.sort(() => 0.5 - Math.random());
+            let selected = shuffled.slice(0, 10);
+            this.state.songs = selected;
+        } else {
+            this.getRandomSongs();
+        }
+        this.preloadSongs();
+        if (this.state.id) {
+            this.preloadUserPlaylists();
+        }
+    }
+
+    preloadUserPlaylists() {
+            fetch('http://localhost:4000/playlist/', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json())
+              .then(response => { 
+                console.log(`Preloaded playlists ${JSON.stringify(response)}`);
+                var preloaded = response.filter(ex => ex.user_id == this.state.id);
+                console.log(`Preloaded playlists ${JSON.stringify(preloaded)}`);
+                this.setState({ preloadedPlaylists: preloaded });
+            })
     }
 
     changeSongs(playlist) {
@@ -101,23 +131,45 @@ class PlayScreen extends React.Component {
         this.setState({ currentSong: song, audio: newAudio, history: history });
     }
 
-    getState() {
+    getRandomSongs() {
         fetch('http://localhost:44144/random/10')
             .then(response => response.json())
             .then(data => {
                 this.processData(data);
+            })
+    }
+
+    preloadSongs() {
+        fetch('http://localhost:44144/track', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                this.preloadAllSongs(data);
             });
+    }
+
+    preloadAllSongs(data) {
+        var songs = data.payload;       
+        console.log(`Preloaded ${songs.length} songs`);
+        localStorage.setItem("all_songs", JSON.stringify(songs));
+        this.setState({ allSongs: songs})
     }
 
     processData(data) {
         var songs = data.payload;
-        this.setState({ allSongs: songs, songs: songs, currentSong: {} })
+        console.log(`LOADED ${songs.length} RANDOM SONGS`);
+        this.setState({ songs: songs, currentSong: {} })
     }
 
     render() {
         return (
             <>
-                <Menu changeSongs={this.changeSongs} resetAuth={this.resetAuth} userId={this.state.id} username={this.state.username} passAuthToken={this.acceptAuthToken} authCompleted={this.state.authCompleted} 
+                <Menu preloadedPlaylists={this.state.preloadedPlaylists} changeSongs={this.changeSongs} resetAuth={this.resetAuth} userId={this.state.id} username={this.state.username} passAuthToken={this.acceptAuthToken} authCompleted={this.state.authCompleted} 
                 processAuth={this.processAuth} processRegistration={this.processRegistration} history={this.state.history} changeSongCallBack={this.changeSong}
                 />
                 <AlbumInfo song={this.state.currentSong} />
