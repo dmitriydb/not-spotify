@@ -1,5 +1,5 @@
-var coverName = "rean cover";
-var albumName = '[Reanimation]';
+var coverName = "D:\\covers\\adds\\min.jpg";
+var albumName = 'Minutes to Midnight (Best Buy';
 
 var album = db.getCollection("music_albums").findOne({name: albumName});
 var tracks = album.tracks;

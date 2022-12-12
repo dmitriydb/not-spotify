@@ -7,7 +7,7 @@ class PlayScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { allSongs: [], songs: [], currentSong: {}, history: [], preloadedPlaylists: null, authCompleted: false }
+        this.state = { allSongs: [], songs: [], likes: [], currentSong: {}, history: [], preloadedPlaylists: null, authCompleted: false }
         if (localStorage.getItem("auth_data")) {
             var authData = JSON.parse(localStorage.getItem("auth_data"));
             this.state.id = authData.id;
@@ -24,6 +24,11 @@ class PlayScreen extends React.Component {
             console.log(`Preloaded ${allSongs.length} songs from the storage`);
             this.state.allSongs = allSongs ? allSongs : [];
         }
+        if (localStorage.getItem("likes")) {
+            var likes = JSON.parse(localStorage.getItem("likes"));
+            this.state.likes = likes ? likes : [];
+        }
+        this.likeSong = this.likeSong.bind(this);
         const http = new XMLHttpRequest()
         this.changeSong = this.changeSong.bind(this);
         this.processRegistration = this.processRegistration.bind(this);
@@ -43,6 +48,7 @@ class PlayScreen extends React.Component {
         this.preloadSongs();
         if (this.state.id) {
             this.preloadUserPlaylists();
+            this.preloadUserLikes(this.state.id);
         }
     }
 
@@ -61,6 +67,20 @@ class PlayScreen extends React.Component {
                 this.setState({ preloadedPlaylists: preloaded });
             })
     }
+
+    preloadUserLikes(user_id) {
+        fetch('http://localhost:4001/user/' + user_id, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => response.json())
+          .then(response => { 
+            console.log(`Preloaded likes ${JSON.stringify(response.favorites.length)}`);
+            this.setState({ likes: response.favorites });
+        })
+}
 
     changeSongs(playlist) {
         var newSongs = [];
@@ -94,15 +114,64 @@ class PlayScreen extends React.Component {
         })
     }
 
+    likeSong(song_id) {
+        let likes = this.state.likes;
+        const index = likes.indexOf(song_id);
+        if (index > -1) { // only splice array when item is found
+            likes.splice(index, 1); // 2nd parameter means remove one item only
+            this.sendDislikeToService(song_id, this.state.id);
+        } else {
+            likes.push(song_id);
+            this.sendLikeToService(song_id, this.state.id);
+        }
+        localStorage.setItem("likes", JSON.stringify(likes));
+        this.setState({likes: likes});
+    }
+
+    sendLikeToService(song_id, user_id) {
+        if (!user_id) {
+            user_id = "notset";
+        }
+            var dto = { song_id, user_id };
+            console.log(JSON.stringify(dto));
+            fetch('http://localhost:4001/song/favorite', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dto)
+            }).then(response => console.log(response.status));
+              
+    }
+
+    sendDislikeToService(song_id, user_id) {
+        if (!user_id) {
+            user_id = "notset";
+        }
+        var dto = { song_id, user_id };
+        fetch('http://localhost:4001/song/favorite', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dto)
+        }).then(response => console.log(response.status));
+}
+
     resetAuth() {
-        this.setState({ id: "", token: "", username: "", authCompleted: false });
+        this.setState({ likes: [], id: "", token: "", username: "", preloadedPlaylists: [], authCompleted: false });
         localStorage.removeItem("auth_data");
+        localStorage.removeItem("likes");
     }
 
     acceptAuthToken({ id, username, token }) {
         this.setState({ id, token, username, authCompleted: true })
         var auth_data = {id, token, username};
         localStorage.setItem("auth_data", JSON.stringify(auth_data));
+        this.preloadUserPlaylists();
+        this.preloadUserLikes(id);
     }
 
     changeSong(song, noHistory = false) {
@@ -173,7 +242,7 @@ class PlayScreen extends React.Component {
                 processAuth={this.processAuth} processRegistration={this.processRegistration} history={this.state.history} changeSongCallBack={this.changeSong}
                 />
                 <AlbumInfo song={this.state.currentSong} />
-                <Songs userId={this.state.id} currentSong={this.state.currentSong} songs={this.state.songs} changeSongCallBack={this.changeSong} />
+                <Songs userId={this.state.id} likes={this.state.likes} likeSong={this.likeSong} currentSong={this.state.currentSong} songs={this.state.songs} changeSongCallBack={this.changeSong} />
             </>
         );
     }

@@ -140,9 +140,10 @@ class Menu extends React.Component {
 
     render() {
         var recently = [];
+        let key = 1;
         for (var song of this.props.history) {
             recently.push(
-                <RecentlyPlayedItem song={song} changeSongCallBack={this.props.changeSongCallBack} />
+                <RecentlyPlayedItem key={key++} song={song} changeSongCallBack={this.props.changeSongCallBack} />
             )
         }
         if (this.state.mode == "menu") {
